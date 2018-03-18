@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------
 --
--- Behaviours.lua -> holds all the functions necessary for robot movement and behaviour
+-- HunterRobotFactory.lua -> responsible for the creation of hunter robots
 --imports
 local properties = require('Configuration.Properties')
 -----------------------------------------------------------------------------------------
