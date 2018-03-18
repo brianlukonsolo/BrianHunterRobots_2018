@@ -2,6 +2,7 @@
 --
 -- main.lua -> the most important file that runs the whole app
 --imports
+local robotFactory = require('RobotFactory.HunterRobotFactory')
 local robotFunctions = require('RobotFunctions.Behaviours')
 local props = require('Configuration.Properties')
 --globals
@@ -16,23 +17,9 @@ bg:setFillColor(props.ZERO, props.ZERO, 0.2)
 --Robot clones factory
 local spawnTable = {}
 
-local function spawnHunterRobot()
-	local hunterRobot = display.newCircle(props.BOT_SIZE, props.BOT_SIZE, props.BOT_SIZE)
-	hunterRobot.name = props.DEFAULT_BOT_NAME
-	hunterRobot.bias = math.random(props.BIAS_MIN, props.BIAS_MAX)
-	hunterRobot.x = math.random(props.MAX_DISTANCE_LEFT, props.MAX_DISTANCE_RIGHT)
-	hunterRobot.y = math.random(props.MAX_DISTANCE_UP, props.MAX_DISTANCE_DOWN)
-	hunterRobot.nextDestinationX = math.random(props.BOT_DESTINATION_MIN, props.BOT_DESTINATION_MAX)
-	hunterRobot.nextDestinationY = math.random(props.BOT_DESTINATION_MIN, props.BOT_DESTINATION_MAX)
-	hunterRobot:setFillColor(0.8, props.ZERO, props.ZERO)
-
-	return hunterRobot
-
-end
-
 --Spawning the bots
 for i=1, props.NUMBER_OF_BOTS_TO_SPAWN do
- spawnTable[i] = spawnHunterRobot()
+ spawnTable[i] = robotFactory.createHunterRobot()
  spawnTable[i].name = 'Bot' .. tostring(math.random(props.ZERO, props.MAX_BOT_POPULATION))
 end
 
