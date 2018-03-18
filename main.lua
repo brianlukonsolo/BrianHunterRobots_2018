@@ -15,13 +15,7 @@ bg.y = display.contentHeight/2
 bg:setFillColor(props.ZERO, props.ZERO, 0.2)
 
 --Robot clones factory
-local spawnTable = {}
-
---Spawning the bots
-for i=1, props.NUMBER_OF_BOTS_TO_SPAWN do
- spawnTable[i] = robotFactory.createHunterRobot()
- spawnTable[i].name = 'Bot' .. tostring(math.random(props.ZERO, props.MAX_BOT_POPULATION))
-end
+local spawnTable = robotFactory.createHunterRobots(props.NUMBER_OF_BOTS_TO_SPAWN)
 
 function allBotsExplore()
 	for c=1, #spawnTable do
