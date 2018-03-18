@@ -14,33 +14,30 @@ bg.x = display.contentWidth/2
 bg.y = display.contentHeight/2
 bg:setFillColor(props.ZERO, props.ZERO, 0.2)
 
---Robot clones factory
-local spawnTable = {}
-
---Spawning the bots
-for i=1, props.NUMBER_OF_BOTS_TO_SPAWN do
- spawnTable[i] = robotFactory.createHunterRobot()
- spawnTable[i].name = 'Bot' .. tostring(math.random(props.ZERO, props.MAX_BOT_POPULATION))
-end
-
-function allBotsExplore()
-	for c=1, #spawnTable do
-		robotFunctions.pickNewCoordinates(spawnTable[c])
-		timer.performWithDelay(math.random(props.SINGLE_BOT_TIMER_MIN, 
-		props.SINGLE_BOT_TIMER_MAX), robotFunctions.move(spawnTable[c]))
-	end
-
-end
+--Recieve new bots table from factory
+local spawnTable = robotFactory.createHunterRobots(props.NUMBER_OF_BOTS_TO_SPAWN)
 
 --bots explore forever with interval
-local timedEvent = timer.performWithDelay(
-	math.random(props.TIMER_MINIMUM, props.TIMER_MAXIMUM), allBotsExplore, props.ZERO)
+local allBotTimer = timer.performWithDelay(
+	math.random(props.ZERO, props.SINGLE_BOT_TIMER_MAX), function()
+	local botTimer
+	if killall == false then
+		for i=1, #spawnTable do
+			 botTimer= timer.performWithDelay( math.random(props.ZERO,
+			 props.SINGLE_BOT_TIMER_MAX),
+
+			 robotFunctions.explore(spawnTable[i]))
+		end
+	else
+		botTimer = nil
+	end
+end, props.ZERO)
+
 
 
 --End of program-------------------------------------------------------------------------
 --Make sure transitions stop and objects are deleted
 local function cleanUpScene()
-	timedEvent = nil
 	--delete all spawned bots
 	for k,v in pairs(spawnTable) do
 		k = nil
@@ -48,6 +45,8 @@ local function cleanUpScene()
 	end
 	--destroy the spawn table
 	spawnTable = nil
+	--kill the timer
+	allBotTimer = nil
 
 end
 

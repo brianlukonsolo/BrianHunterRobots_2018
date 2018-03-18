@@ -8,25 +8,13 @@ local properties = require('Configuration.Properties')
 local robotFunctions = {}
 
 function robotFunctions.pickNewCoordinates(obj)
-	obj.nextDestinationX = math.random(properties.BOT_DESTINATION_MIN,
+	local object = obj
+	object.nextDestinationX = math.random(properties.BOT_DESTINATION_MIN,
 	 properties.BOT_DESTINATION_MAX)
-	obj.nextDestinationY = math.random(properties.BOT_DESTINATION_MIN,
+	object.nextDestinationY = math.random(properties.BOT_DESTINATION_MIN,
 	 properties.BOT_DESTINATION_MAX)
 
-end
-
-function robotFunctions.killTransition(obj)
-	if obj.transition and killall == true then
-		transition.cancel(obj.transition)
-		obj.transition = nil
-	end
-
-end
-
-function robotFunctions.explore(obj)
-	pickNewCoordinates(obj)
-	timer.performWithDelay(math.random(properties.SINGLE_BOT_TIMER_MIN, 
-		properties.SINGLE_BOT_TIMER_MAX), move(obj))
+	return object
 
 end
 
@@ -49,6 +37,28 @@ function robotFunctions.move(obj)
 	--If robot is within the display area limits
 	obj.transition = transition.to(obj, {x = x or obj.nextDestinationX, 
 		y = y or obj.nextDestinationY, delta = true})
+
+end
+
+function robotFunctions.allBotsDecideDestination(spawnTableOfRobots)
+	for i=1, #spawnTableOfRobots do
+		spawnTableOfRobots[i] = robotFunctions.pickNewCoordinates(spawnTableOfRobots[i])
+	end
+
+end
+
+function robotFunctions.killTransition(obj)
+	if obj.transition and killall == true then
+		transition.cancel(obj.transition)
+		obj.transition = nil
+	end
+
+end
+
+function robotFunctions.explore(obj)
+	robotFunctions.pickNewCoordinates(obj)
+	timer.performWithDelay(math.random(properties.SINGLE_BOT_TIMER_MIN, 
+		properties.SINGLE_BOT_TIMER_MAX), robotFunctions.move(obj))
 
 end
 
